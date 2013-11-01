@@ -23,10 +23,9 @@ android {
 }
 
 dependencies {
-	compile 'com.android.support:support-v4:13.0.0'
-	compile 'com.android.support:gridlayout-v7:13.0.0'
-
-	// You must install or update the Support Repository through the SDK manager to use this dependency.
-	// The Support Repository (separate from the corresponding library) can be found in the Extras category.
-	compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.android.support:gridlayout-v7:13.0.0'
+    compile 'com.android.support:appcompat-v7:18.0.0'
+    compile files('src/main/libs/gson-2.2.4.jar')
+    compile files('src/main/libs/okhttp-1.2.1-jar-with-dependencies.jar')
 }
