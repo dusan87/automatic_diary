@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_1">
+    </ImageView>
+
+    <LinearLayout
+        style="@style/LoginFormContainer"
+        android:focusableInTouchMode="true"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edt_login_email"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="@string/hint_email"
+            android:maxLines="1"
+            android:background="@android:color/white"
+            android:inputType="textEmailAddress"
+            android:layout_margin="26dp"
+            android:padding="10dp"/>
+        <EditText
+            android:id="@+id/edt_login_pass"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="@string/hint_pass"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:layout_margin="26dp" />
+    </LinearLayout>
+</FrameLayout>
