@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Automatic_Diary</string>
+    <string name="app_name">""</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="settings_mi">Refresh</string>
@@ -12,5 +12,21 @@
     <string name="signup">Sign UP</string>
     <string name="hint_email">Type Email</string>
     <string name="hint_pass">Type Password</string>
+    <string name="singin">Sign IN</string>
+    <string name="singup">Sign UP</string>
+    <string name="registration_label">Registration</string>
+    <string name="hint_name">Type name</string>
+    <string name="hint_username">Type username</string>
+    <string name="hint_country">Where are you from ?</string>
+    <string name="hint_city">Current city</string>
+    <string name="hint_picture">Upload picture</string>
+    <string name="btn_registration">Register</string>
+    <string name="cancel">Cancel</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_repassword">Confirm password</string>
+    <string name="hint_last_name">Type lastname</string>
+    <string name="hint_age">Type age</string>
+    <string name="label_sign_in">Sign in</string>
+    <string name="label_sign_up">Sign up</string>
 
 </resources>

@@ -1,38 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_1">
-    </ImageView>
+    <ScrollView
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent">
 
-    <LinearLayout
-        style="@style/LoginFormContainer"
-        android:focusableInTouchMode="true"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/edt_login_email"
+        <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:hint="@string/hint_email"
-            android:maxLines="1"
-            android:background="@android:color/white"
-            android:inputType="textEmailAddress"
-            android:layout_margin="26dp"
-            android:padding="10dp"/>
-        <EditText
-            android:id="@+id/edt_login_pass"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:hint="@string/hint_pass"
-            android:background="@android:color/white"
-            android:padding="10dp"
-            android:layout_margin="26dp" />
-    </LinearLayout>
-</FrameLayout>
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                style="@style/ShadowText"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:text="Email Address"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/text" />
+
+            <AutoCompleteTextView
+                android:id="@+id/edt_login_username"
+                style="@style/SignInEditText"
+                android:completionThreshold="1"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edt_login_pass" />
+
+            <TextView
+                style="@style/ShadowText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:text="Password"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/text" />
+
+            <EditText
+                android:id="@+id/edt_login_pass"
+                style="@style/SignInEditText"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:password="true" />
+
+            <Button
+                android:id="@+id/btn_signin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/ShadowText"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_background_states"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/label_sign_in"
+                android:textColor="@color/text"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                style="@style/ShadowText"
+                android:id="@+id/btn_signup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_signup_background_enabled"
+                android:text="@string/label_sign_up"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/text"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
