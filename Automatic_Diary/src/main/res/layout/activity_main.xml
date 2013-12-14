@@ -18,8 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:padding="@dimen/standard_border"
-        android:text="@string/stop_message"
-        android:textColor="@color/opaque_blue"/>
+        android:text="@string/stop_message"/>
     <EditText
         android:id = "@+id/httpErrorBadUrl"
         android:layout_height="wrap_content"

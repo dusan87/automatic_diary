@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@drawable/main_background"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginRight="20dp">
+
+                    <TextView
+                        style="@style/ShadowText"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/label_registration_photo"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@color/text" />
+
+                    <ImageView
+                        android:id="@+id/iv_profile_photo"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:background="@drawable/icon_person"
+                        android:contentDescription="@string/desc_photo" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/ShadowText"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/label_registration_first_name"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@color/text" />
+
+                    <EditText
+                        android:id="@+id/edt_name"
+                        style="@style/SignInEditText"
+                        android:inputType="textAutoComplete"
+                        android:hint="@string/hint_name"
+                        android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        style="@style/ShadowText"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/label_registration_last_name"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@color/text" />
+
+                    <EditText
+                        android:id="@+id/edt_last_name"
+                        style="@style/SignInEditText"
+                        android:inputType="textAutoComplete"
+                        android:hint="@string/hint_last_name"
+                        android:layout_marginTop="5dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginRight="20dp">
+                    <TextView
+                        style="@style/ShadowText"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/label_registration_gender"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@color/text" />
+
+                    <Spinner
+                        android:id="@+id/sp_registration_gender"
+                        style="@style/SignInEditText"
+                        android:spinnerMode="dialog"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:popupBackground="@color/text"
+                        android:background="@android:color/white"
+                        android:entries="@array/sex">
+
+                    </Spinner>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/ShadowText"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/label_registration_bday"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@color/text" />
+
+                    <TextView
+                        style="@style/ShadowText"
+                        android:id="@+id/tv_registration_bday"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/text">
+                    </TextView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/ShadowText"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:text="@string/label_registration_contry"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/text" />
+
+            <AutoCompleteTextView
+                android:id="@+id/edt_country"
+                style="@style/SignInEditText"
+                android:completionThreshold="1"
+                android:hint="@string/hint_country"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                style="@style/ShadowText"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:text="@string/label_registration_city"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/text" />
+
+            <EditText
+                android:id="@+id/edt_city"
+                style="@style/SignInEditText"
+                android:inputType="textAutoComplete"
+                android:hint="@string/hint_city"
+                android:layout_marginTop="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    style="@style/ShadowText"
+                    android:id="@+id/btn_cancel_registration"
+                    android:text="@string/cancel_button_text"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/button_background_disabled"
+                    android:gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    style="@style/ShadowText"
+                    android:id="@+id/btn_registration_next1"
+                    android:text="@string/registration_next1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/button_background_states"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

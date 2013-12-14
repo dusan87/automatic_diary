@@ -28,5 +28,22 @@
     <string name="hint_age">Type age</string>
     <string name="label_sign_in">Sign in</string>
     <string name="label_sign_up">Sign up</string>
+    <string name="label_registration_first_name">First name</string>
+    <string name="label_registration_last_name">Last name</string>
+    <string name="label_registration_contry">Contry</string>
+    <string name="label_registration_city">City</string>
+    <string name="label_registration_email">Email</string>
+    <string name="label_registration_password">Password</string>
+    <string name="label_registration_repeat_password">Re-password</string>
+    <string name="registration_next1">Next</string>
+    <string name="label_registration_gender">Sex</string>
+    <string name="label_registration_bday">Date of birth</string>
+    <string name="label_registration_photo">Photo</string>
+    <string name="desc_photo">Take/Upload photo</string>
+
+    <string-array name="sex">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 
 </resources>
