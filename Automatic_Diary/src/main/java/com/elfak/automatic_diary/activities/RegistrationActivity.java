@@ -11,9 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
-import com.elfak.automatic_diary.api.LoginRestClient;
+import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.utils.NetUtils;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
@@ -35,14 +34,23 @@ public class RegistrationActivity extends Activity {
 
     ProgressDialog progressDialog;
 
-    LoginRestClient httpClientPost;
+    RestClient postHttpClient, getHttpClient;
 
-    static String csrf_token ;
+    PersistentCookieStore cookieStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regestration);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        // I made get request here in order to get all cookies that I need in rest of code
+        getHttpClient = new RestClient();
+        cookieStore = new PersistentCookieStore(RegistrationActivity.this);
+        getHttpClient.setCookieStore(cookieStore);
+
+        getHttpClient.get("check_user/", new AsyncHttpResponseHandler() {
+        });
         bindElements();
     }
 
@@ -62,15 +70,14 @@ public class RegistrationActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                if(!NetUtils.isNetworkOnline(RegistrationActivity.this)){
-                    Toast.makeText(RegistrationActivity.this,"Device is not connected", Toast.LENGTH_SHORT).show();
-                }else {
-                    if((edt_password.getText().toString().equals(edt_repassword.getText().toString()) || edt_password.getText().toString().equals("")) ){
+                if (!NetUtils.isNetworkOnline(RegistrationActivity.this)) {
+                    Toast.makeText(RegistrationActivity.this, "Device is not connected", Toast.LENGTH_SHORT).show();
+                } else {
+                    if ((edt_password.getText().toString().equals(edt_repassword.getText().toString()) || edt_password.getText().toString().equals(""))) {
                         checkUser();
-                    } else if (edt_password.getText().toString() ==""){
+                    } else if (edt_password.getText().toString() == "") {
                         Toast.makeText(RegistrationActivity.this, "Password field could not be blank!", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(RegistrationActivity.this, "Doesn't match passowrds, please correct it!", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -86,23 +93,20 @@ public class RegistrationActivity extends Activity {
         });
     }
 
-    private void checkUser(){
+    private void checkUser() {
 
-        progressDialog = ProgressDialog.show(RegistrationActivity.this, "Validation" ,"Checking data...", true);
-        email= edt_email.getText().toString();
+        progressDialog = ProgressDialog.show(RegistrationActivity.this, "Validation", "Checking data...", true);
+        email = edt_email.getText().toString();
         password1 = edt_password.getText().toString();
         password2 = edt_repassword.getText().toString();
 
-        httpClientPost =  new LoginRestClient();
-        AsyncHttpClient client =  new AsyncHttpClient();
-        PersistentCookieStore myCookieStore = new PersistentCookieStore(RegistrationActivity.this);
-        client.setCookieStore(myCookieStore);
+        postHttpClient = new RestClient();
 
         RequestParams params = new RequestParams();
-        List<Cookie> cookies = myCookieStore.getCookies();
+        List<Cookie> cookies = cookieStore.getCookies();
 
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals("csrftoken")){
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("csrftoken")) {
                 params.put("csrfmiddlewaretoken", cookie.getValue());
             }
         }
@@ -111,16 +115,14 @@ public class RegistrationActivity extends Activity {
         params.put("password1", password1);
         params.put("password2", password2);
 
-
-
-        client.post("http://192.168.1.53:8000/check_user/",params, new AsyncHttpResponseHandler(){
+        postHttpClient.post("check_user/", params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 super.onSuccess(statusCode, headers, responseBody);
-                Intent i =  new Intent(RegistrationActivity.this,RegistrationActivity_1.class);
+                Intent i = new Intent(RegistrationActivity.this, RegistrationActivity_1.class);
                 i.putExtra("username", email);
-                i.putExtra("password1",password1);
+                i.putExtra("password1", password1);
                 i.putExtra("password2", password2);
                 startActivity(i);
                 progressDialog.dismiss();

@@ -2,18 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elfak.automatic_diary"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="7"
         android:targetSdkVersion="18" />
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera"
-        android:required="false"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -43,7 +45,9 @@
 
         </activity>
 
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="ddc6da61d6ce0908a0076c30f6b620c2aad4e160"/>
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="ddc6da61d6ce0908a0076c30f6b620c2aad4e160" />
     </application>
 
 </manifest>

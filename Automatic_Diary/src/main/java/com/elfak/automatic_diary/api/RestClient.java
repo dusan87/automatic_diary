@@ -7,15 +7,12 @@ import org.apache.http.client.*;
 /**
  * Created by dusanristic on 12/4/13.
  */
-public class LoginRestClient {
+public class RestClient {
 
-    private static final String BASE_URL = "127.0.0.1:8000/";
+    private static final String BASE_URL = "http://192.168.1.53:8000/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
-    private static AsyncHttpClient getClient(){
-        return client;
-    }
     public void setCookieStore(CookieStore cookieStore){
         client.setCookieStore(cookieStore);
     }

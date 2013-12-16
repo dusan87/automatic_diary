@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
-import com.loopj.android.http.AsyncHttpClient;
+import com.elfak.automatic_diary.api.RestClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
@@ -48,7 +48,7 @@ public class RegistrationActivity_1 extends Activity {
     String username, password1, passowrd2, first_name, last_name, gender, bday, country, city;
     EditText edt_first_name, edt_last_name, edt_country, edt_city;
     Spinner sp_gender;
-    TextView  tv_bday_date;
+    TextView tv_bday_date;
     ImageView iv_profile_photo;
 
     Button btn_cancel, btn_next;
@@ -57,17 +57,27 @@ public class RegistrationActivity_1 extends Activity {
 
     ProgressDialog progressDialog;
 
+    PersistentCookieStore cookieStore;
+
+    RestClient getHttpClient, postHttpClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_1_registration);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        getHttpClient = new RestClient();
+        cookieStore = new PersistentCookieStore(RegistrationActivity_1.this);
+        getHttpClient.setCookieStore(cookieStore);
+        getHttpClient.get("create_user/", new AsyncHttpResponseHandler() {
+        });
+
         bindElements();
     }
 
 
-    private void bindElements(){
+    private void bindElements() {
 
         edt_first_name = (EditText) findViewById(R.id.edt_name);
         edt_last_name = (EditText) findViewById(R.id.edt_last_name);
@@ -90,7 +100,6 @@ public class RegistrationActivity_1 extends Activity {
         passowrd2 = intent.getStringExtra("password2");
 
 
-
         // Profile photo /Image view
 
         iv_profile_photo = (ImageView) findViewById(R.id.iv_profile_photo);
@@ -104,7 +113,7 @@ public class RegistrationActivity_1 extends Activity {
                 alertDialogUploadTakePhoto.setItems(new CharSequence[]{"Take photo", "Upload photo"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i){
+                        switch (i) {
                             case 0:
                                 takePhoto();
                                 break;
@@ -121,7 +130,7 @@ public class RegistrationActivity_1 extends Activity {
         });
 
         // initialization date picker
-        final DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener(){
+        final DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
 
@@ -132,7 +141,7 @@ public class RegistrationActivity_1 extends Activity {
         tv_bday_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog dialog = new DatePickerDialog(RegistrationActivity_1.this, datePickerListener, 2013, 03,05);
+                DatePickerDialog dialog = new DatePickerDialog(RegistrationActivity_1.this, datePickerListener, 2013, 03, 05);
                 dialog.show();
             }
         });
@@ -153,19 +162,18 @@ public class RegistrationActivity_1 extends Activity {
         });
 
 
-
     }
 
-    private void takePhoto(){
+    private void takePhoto() {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File folder = new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp");
 
 
-        if(!folder.exists()){
-            if(folder.mkdir()){
+        if (!folder.exists()) {
+            if (folder.mkdir()) {
                 System.out.println("The dir is created successful");
-            }else {
+            } else {
                 System.out.println("There is a problem with creation directory");
             }
         }
@@ -185,13 +193,13 @@ public class RegistrationActivity_1 extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 1234:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = data.getData();
-                    String [] filePathColumn = {MediaStore.Images.Media.DATA};
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                    Cursor cursor= getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                     cursor.moveToFirst();
 
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -199,15 +207,15 @@ public class RegistrationActivity_1 extends Activity {
                     cursor.close();
 
                     Bitmap image = BitmapFactory.decodeFile(filePath);
-                    Drawable drawable = new BitmapDrawable(getResources(),image);
+                    Drawable drawable = new BitmapDrawable(getResources(), image);
                     iv_profile_photo.setBackground(drawable);
                 }
                 break;
             case 12345:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
 
                     Bitmap image = getProfilePhoto();
-                    Drawable profile_photo = new BitmapDrawable(getResources(),image);
+                    Drawable profile_photo = new BitmapDrawable(getResources(), image);
                     iv_profile_photo.setBackground(profile_photo);
                 }
                 break;
@@ -215,7 +223,7 @@ public class RegistrationActivity_1 extends Activity {
     }
 
     private Bitmap getProfilePhoto() {
-        BitmapFactory.Options options =  new BitmapFactory.Options();
+        BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         options.inPurgeable = true;
         options.inSampleSize = 3;
@@ -227,70 +235,59 @@ public class RegistrationActivity_1 extends Activity {
     private void fillUserProfile() {
 
         progressDialog = ProgressDialog.show(RegistrationActivity_1.this, "Create account", "Creating account ...", true);
-        first_name =  edt_first_name.getText().toString();
+        first_name = edt_first_name.getText().toString();
         last_name = edt_last_name.getText().toString();
         gender = sp_gender.getSelectedItem().toString();
         bday = tv_bday_date.getText().toString();
-        city =  edt_city.getText().toString();
+        city = edt_city.getText().toString();
         country = edt_country.getText().toString();
 
-        AsyncHttpClient getClient = new AsyncHttpClient();
+        postHttpClient = new RestClient();
 
-        getClient.get("http://192.168.1.53:8000/create_user/", new AsyncHttpResponseHandler(){
+        RequestParams params = new RequestParams();
+
+        List<Cookie> cookies = cookieStore.getCookies();
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("csrftoken")) {
+                params.put("csrfmiddlewaretoken", cookie.getValue());
+            }
+        }
+
+        File profile_photo = new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp/profile.jpg");
+
+        try {
+            params.put("image", profile_photo);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        params.put("first_name", first_name);
+        params.put("last_name", last_name);
+        params.put("username", username);
+        params.put("password1", password1);
+        params.put("password2", passowrd2);
+        params.put("city", city);
+        params.put("country", country);
+        params.put("birth_day", bday);
+
+
+        postHttpClient.post("create_user/", params, new AsyncHttpResponseHandler() {
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 super.onSuccess(statusCode, headers, responseBody);
-
-                AsyncHttpClient client = new AsyncHttpClient();
-                PersistentCookieStore myCookieStore = new PersistentCookieStore(RegistrationActivity_1.this);
-                client.setCookieStore(myCookieStore);
-                RequestParams params =  new RequestParams();
-                List<Cookie> cookies = myCookieStore.getCookies();
-
-                for(Cookie cookie : cookies){
-                    if(cookie.getName().equals("csrftoken")){
-                        params.put("csrfmiddlewaretoken", cookie.getValue());
-                    }
-                }
-
-
-
-                File profile_photo = new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp/profile.jpg");
-
-                try {
-                    params.put("image", profile_photo);
-                } catch (FileNotFoundException e){
-                    e.printStackTrace();
-                }
-
-                params.put("first_name",first_name);
-                params.put("last_name",last_name);
-                params.put("username", username);
-                params.put("password1", password1);
-                params.put("password2", passowrd2);
-                params.put("city", city);
-                params.put("country", country);
-                params.put("birth_day",bday);
-
-
-                client.post("http://192.168.1.53:8000/create_user/", params, new AsyncHttpResponseHandler() {
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        super.onSuccess(statusCode, headers, responseBody);
-                        Intent intent = new Intent(RegistrationActivity_1.this, LoginActivity.class);
-                        startActivity(intent);
-                        progressDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        super.onFailure(statusCode, headers, responseBody, error);
-                        Toast.makeText(RegistrationActivity_1.this, "Failure", Toast.LENGTH_LONG).show();
-                    }
-
-                });
+                Intent intent = new Intent(RegistrationActivity_1.this, LoginActivity.class);
+                startActivity(intent);
+                progressDialog.dismiss();
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                super.onFailure(statusCode, headers, responseBody, error);
+                Toast.makeText(RegistrationActivity_1.this, "Failure", Toast.LENGTH_LONG).show();
+            }
+
         });
 
 

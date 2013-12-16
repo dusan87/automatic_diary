@@ -13,9 +13,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.elfak.automatic_diary.R;
-import com.elfak.automatic_diary.api.LoginRestClient;
+import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.utils.NetUtils;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
@@ -25,34 +24,45 @@ import org.apache.http.cookie.Cookie;
 
 import java.util.List;
 
-/**adm
+/**
+ * adm
  * Created by dusanristic on 11/29/13.
  */
 
 
-
-public class LoginActivity extends Activity{
+public class LoginActivity extends Activity {
 
     Button sign_in, sing_up;
     EditText edt_username, edt_password;
 
     String username, password;
 
-    LoginRestClient client ;
+    RestClient getHttpClient, postHttpClient;
+
+    PersistentCookieStore cookieStore;
 
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Crashlytics.start(this);
         setContentView(R.layout.activity_login);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        getHttpClient = new RestClient();
+        cookieStore = new PersistentCookieStore(LoginActivity.this);
+        getHttpClient.setCookieStore(cookieStore);
+
+        getHttpClient.get("login_user/", new AsyncHttpResponseHandler() {
+        });
+
         bindElements();
 
 
     }
 
-    private void bindElements(){
+    private void bindElements() {
 
         edt_username = (EditText) findViewById(R.id.edt_login_username);
         edt_username.setText(username);
@@ -65,9 +75,9 @@ public class LoginActivity extends Activity{
         sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!NetUtils.isNetworkOnline(LoginActivity.this)){
+                if (!NetUtils.isNetworkOnline(LoginActivity.this)) {
                     Toast.makeText(LoginActivity.this, "Device is not connected. Please, connect device and try again to Login!", 10).show();
-                }else{
+                } else {
                     attemptLogin();
                 }
             }
@@ -80,9 +90,9 @@ public class LoginActivity extends Activity{
         sing_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!NetUtils.isNetworkOnline(LoginActivity.this)){
+                if (!NetUtils.isNetworkOnline(LoginActivity.this)) {
                     Toast.makeText(LoginActivity.this, "Device is not connected", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     Intent i = new Intent(LoginActivity.this, RegistrationActivity.class);
                     startActivity(i);
                 }
@@ -99,20 +109,20 @@ public class LoginActivity extends Activity{
 
     private void attemptLogin() {
 
-        progressDialog = ProgressDialog.show(LoginActivity.this, "Signing in","Verifying account.", true);
+        progressDialog = ProgressDialog.show(LoginActivity.this, "Signing in", "Verifying account.", true);
+
         // Get value from email edit_text field
         username = edt_username.getText().toString();
         password = edt_password.getText().toString();
 
-        AsyncHttpClient client = new AsyncHttpClient();
+        postHttpClient = new RestClient();
+
         RequestParams params = new RequestParams();
-        PersistentCookieStore myCookieStore = new PersistentCookieStore(LoginActivity.this);
-        client.setCookieStore(myCookieStore);
 
-        List<Cookie> cookies = myCookieStore.getCookies();
+        List<Cookie> cookies = cookieStore.getCookies();
 
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals("csrftoken")){
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("csrftoken")) {
                 params.put("csrfmiddlewaretoken", cookie.getValue());
             }
         }
@@ -120,7 +130,7 @@ public class LoginActivity extends Activity{
         params.put("username", username);
         params.put("password", password);
 
-        client.post("http://192.168.1.53:8000/login_user/", params, new AsyncHttpResponseHandler() {
+        postHttpClient.post("login_user/", params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -137,9 +147,6 @@ public class LoginActivity extends Activity{
                 progressDialog.dismiss();
             }
         });
-
-
-
     }
 
 
