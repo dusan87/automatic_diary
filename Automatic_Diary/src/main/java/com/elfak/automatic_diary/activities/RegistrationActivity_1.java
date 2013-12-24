@@ -254,7 +254,7 @@ public class RegistrationActivity_1 extends Activity {
             }
         }
 
-        File profile_photo = new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp/profile.jpg");
+        File profile_photo = new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp/profile.png");
 
         try {
             params.put("image", profile_photo);

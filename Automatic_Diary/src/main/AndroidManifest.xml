@@ -45,6 +45,11 @@
 
         </activity>
 
+        <activity
+            android:name=".activities.UsersListActivity"
+            android:label="Users List">
+        </activity>
+
         <meta-data
             android:name="com.crashlytics.ApiKey"
             android:value="ddc6da61d6ce0908a0076c30f6b620c2aad4e160" />

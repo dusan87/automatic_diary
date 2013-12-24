@@ -135,7 +135,9 @@ public class LoginActivity extends Activity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 super.onSuccess(statusCode, headers, responseBody);
-                Toast.makeText(LoginActivity.this, "SUCCESS", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, UsersListActivity.class);
+                intent.putExtra("username",username);
+                startActivity(intent);
                 progressDialog.dismiss();
 
             }
