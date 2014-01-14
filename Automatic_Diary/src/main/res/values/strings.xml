@@ -41,6 +41,8 @@
     <string name="label_registration_photo">Photo</string>
     <string name="desc_photo">Take/Upload photo</string>
     <string name="user_full_name">Full name</string>
+    <string name="user_detail_photo">Photo</string>
+    <string name="follow">Follow</string>
 
     <string-array name="sex">
         <item>Male</item>

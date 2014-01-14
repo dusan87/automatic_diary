@@ -18,12 +18,12 @@
         android:required="false" />
 
     <application
+        android:name="com.elfak.automatic_diary.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppBaseTheme"
-        android:debuggable="true"
-        android:name=".MyApplication">
+        android:debuggable="true">
         <activity
             android:name="com.elfak.automatic_diary.activities.LoginActivity"
             android:label="@string/app_name"
@@ -48,6 +48,11 @@
         <activity
             android:name=".activities.UsersListActivity"
             android:label="Users List">
+        </activity>
+
+        <activity android:name=".activities.UserDetailActivity"
+            android:label="User detail">
+
         </activity>
 
         <meta-data

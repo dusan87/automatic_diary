@@ -66,6 +66,7 @@ public class UsersListActivity extends Activity{
                     user.setImage(_user.get("image"));
                     user.setCurrentCity(_user.get("city"));
                     user.setBirthDay(_user.get("birth_day"));
+                    user.setGender(_user.get("gender"));
                     users.add(0,user);
 
                 }

@@ -126,6 +126,14 @@ public class RegistrationActivity extends Activity {
                 i.putExtra("password2", password2);
                 startActivity(i);
                 progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(RegistrationActivity.this, "User exist, please put another email", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+                super.onFailure(statusCode, headers, responseBody, error);
             }
         });
     }

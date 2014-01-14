@@ -61,6 +61,9 @@ public class RegistrationActivity_1 extends Activity {
 
     RestClient getHttpClient, postHttpClient;
 
+    boolean image_flag = false;
+    String profile_photo_path = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +106,6 @@ public class RegistrationActivity_1 extends Activity {
         // Profile photo /Image view
 
         iv_profile_photo = (ImageView) findViewById(R.id.iv_profile_photo);
-
         iv_profile_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,6 +198,7 @@ public class RegistrationActivity_1 extends Activity {
         switch (requestCode) {
             case 1234:
                 if (resultCode == RESULT_OK) {
+                    image_flag = true;
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -206,6 +209,7 @@ public class RegistrationActivity_1 extends Activity {
                     String filePath = cursor.getString(columnIndex);
                     cursor.close();
 
+                    profile_photo_path = filePath;
                     Bitmap image = BitmapFactory.decodeFile(filePath);
                     Drawable drawable = new BitmapDrawable(getResources(), image);
                     iv_profile_photo.setBackground(drawable);
@@ -213,7 +217,8 @@ public class RegistrationActivity_1 extends Activity {
                 break;
             case 12345:
                 if (resultCode == RESULT_OK) {
-
+                    image_flag = false;
+                    profile_photo_path = null;
                     Bitmap image = getProfilePhoto();
                     Drawable profile_photo = new BitmapDrawable(getResources(), image);
                     iv_profile_photo.setBackground(profile_photo);
@@ -237,10 +242,10 @@ public class RegistrationActivity_1 extends Activity {
         progressDialog = ProgressDialog.show(RegistrationActivity_1.this, "Create account", "Creating account ...", true);
         first_name = edt_first_name.getText().toString();
         last_name = edt_last_name.getText().toString();
-        gender = sp_gender.getSelectedItem().toString();
         bday = tv_bday_date.getText().toString();
         city = edt_city.getText().toString();
         country = edt_country.getText().toString();
+        gender = sp_gender.getSelectedItem().toString().equals("Male") ? "M": "F";
 
         postHttpClient = new RestClient();
 
@@ -254,7 +259,8 @@ public class RegistrationActivity_1 extends Activity {
             }
         }
 
-        File profile_photo = new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp/profile.png");
+
+        File profile_photo = image_flag ?new File(profile_photo_path) : new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp/profile.png");
 
         try {
             params.put("image", profile_photo);
@@ -270,6 +276,7 @@ public class RegistrationActivity_1 extends Activity {
         params.put("city", city);
         params.put("country", country);
         params.put("birth_day", bday);
+        params.put("gender", gender);
 
 
         postHttpClient.post("create_user/", params, new AsyncHttpResponseHandler() {
@@ -286,6 +293,7 @@ public class RegistrationActivity_1 extends Activity {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 super.onFailure(statusCode, headers, responseBody, error);
                 Toast.makeText(RegistrationActivity_1.this, "Failure", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
 
         });

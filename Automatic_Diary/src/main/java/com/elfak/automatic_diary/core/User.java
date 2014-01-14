@@ -15,6 +15,7 @@ public class User implements Serializable {
     protected String currentCity;
     protected String image;
     protected String  bday;
+    protected String gender;
 
     public String getFirstName() {
         return firstName;
@@ -22,6 +23,14 @@ public class User implements Serializable {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getUsername() {
