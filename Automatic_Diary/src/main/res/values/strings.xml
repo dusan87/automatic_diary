@@ -43,6 +43,7 @@
     <string name="user_full_name">Full name</string>
     <string name="user_detail_photo">Photo</string>
     <string name="follow">Follow</string>
+    <string name="ac_skip">SKIP</string>
 
     <string-array name="sex">
         <item>Male</item>
