@@ -24,8 +24,8 @@ android {
     buildToolsVersion "17.0.0"
 
     defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 16
+        minSdkVersion 8
+        targetSdkVersion 18
     }
 }
 
@@ -33,6 +33,7 @@ dependencies {
     compile 'com.android.support:support-v4:13.0.0'
     compile 'com.android.support:gridlayout-v7:13.0.0'
     compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'com.google.android.gms:play-services:4.0.30'
     compile files('src/main/libs/gson-2.2.4.jar')
     compile files('src/main/libs/okhttp-1.2.1-jar-with-dependencies.jar')
     compile files('src/main/libs/android-async-http-1.4.4.jar')

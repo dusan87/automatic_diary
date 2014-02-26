@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.elfak.automatic_diary.R;
+import com.elfak.automatic_diary.activities.MapActivity;
 import com.elfak.automatic_diary.activities.UserDetailActivity;
 import com.elfak.automatic_diary.core.User;
 
@@ -62,6 +63,16 @@ public class UsersListFragment extends ListFragment  {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()){
+            case R.id.ac_skip:
+
+                Intent intent = new Intent(getActivity().getBaseContext(), MapActivity.class);
+                getActivity().startActivity(intent);
+
+            default:
+
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

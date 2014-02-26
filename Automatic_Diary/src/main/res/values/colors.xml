@@ -17,4 +17,5 @@
     <color name="button_signup_background_enabled_end">#c84245</color>
     <color name="button_signup_background_enabled_start">#ff1730</color>
     <color name="user_detail">#c84245</color>
+    <color name="red">#FFFF0000</color>
 </resources>
