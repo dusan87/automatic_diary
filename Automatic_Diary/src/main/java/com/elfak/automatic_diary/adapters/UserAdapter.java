@@ -9,7 +9,7 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,35 +18,61 @@ import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.core.User;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by dusanristic on 12/23/13.
  */
-public class UserAdapter extends ArrayAdapter<User> {
+public class UserAdapter extends BaseAdapter {
 
-    int resource;
+    private final List<User> mUsers = new ArrayList<User>();
+
+    private final Context mContext;
+
     RestClient getHttpClientAvatar = new RestClient();
-    public UserAdapter(Context context, int textViewResourceId, List<User> objects) {
-        super(context, textViewResourceId, objects);
-        this.resource = textViewResourceId;
+    public UserAdapter(Context context) {
+        mContext = context;
     }
 
+    // Add an User to the adapter
+
+    public  void add(User user){
+        mUsers.add(user);
+        notifyDataSetChanged();
+    }
+
+    public void clear(){
+        mUsers.clear();
+        notifyDataSetChanged();
+    }
 
     @Override
-    public User getItem(int position) {
-        return super.getItem(position);
+    public Object getItem(int position) {
+        return mUsers.get(position);
+    }
+
+    @Override
+    public int getCount() {
+        return mUsers.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
 
+        final User user = (User)getItem(position);
+
         View rowView;
         if(view == null){
             String inflater = Context.LAYOUT_INFLATER_SERVICE;
 
-            LayoutInflater layoutInflater = (LayoutInflater)getContext().getSystemService(inflater);
+            LayoutInflater layoutInflater = (LayoutInflater)mContext.getSystemService(inflater);
             rowView = layoutInflater.inflate(R.layout.userlist_item, null);
 
         } else {
@@ -57,11 +83,11 @@ public class UserAdapter extends ArrayAdapter<User> {
         TextView full_name = (TextView) rowView.findViewById(R.id.tv_user_full_name);
         TextView country  = (TextView) rowView.findViewById(R.id.tv_user_country);
         TextView birth_day = (TextView) rowView.findViewById(R.id.tv_user_bday);
-        full_name.setText(getItem(position).getFirstName()+ " " + getItem(position).getLastName());
-        country.setText(getItem(position).getCurrentCountry() + ", " + getItem(position).getCurrentCity());
-        birth_day.setText(getItem(position).getBday());
+        full_name.setText(user.getFirstName()+ " " + user.getLastName());
+        country.setText(user.getCurrentCountry() + ", " + user.getCurrentCity());
+        birth_day.setText(user.getBday());
         String[] allowedContentTypes = new String[] { "image/png", "image/jpeg" };
-        getHttpClientAvatar.get("media/" + getItem(position).getImageUrl(), new BinaryHttpResponseHandler(allowedContentTypes){
+        getHttpClientAvatar.get("media/" + user.getImageUrl(), new BinaryHttpResponseHandler(allowedContentTypes){
             @Override
             public void onSuccess(byte[] binaryData) {
                 super.onSuccess(binaryData);

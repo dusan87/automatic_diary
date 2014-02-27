@@ -20,7 +20,6 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +30,7 @@ public class UsersListActivity extends Activity{
 
     RestClient getHttpClient;
 
-    private UserAdapter aa;
-    private ArrayList<User> users;
+    private UserAdapter mAdapter;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -41,11 +39,11 @@ public class UsersListActivity extends Activity{
 
         setContentView(R.layout.activity_users_list);
 
+        mAdapter = new UserAdapter(UsersListActivity.this);
         RequestParams params = new RequestParams();
         String username = getIntent().getStringExtra("username");
         params.put("username", username);
         // get reference to the Fragment
-        users =  new ArrayList<User>();
 
         getHttpClient = new RestClient();
         getHttpClient.get("all_users/", params,  new JsonHttpResponseHandler(){
@@ -67,10 +65,9 @@ public class UsersListActivity extends Activity{
                     user.setCurrentCity(_user.get("city"));
                     user.setBirthDay(_user.get("birth_day"));
                     user.setGender(_user.get("gender"));
-                    users.add(0,user);
+                    mAdapter.add(user);
 
                 }
-                aa.notifyDataSetChanged();
             }
 
             @Override
@@ -84,9 +81,8 @@ public class UsersListActivity extends Activity{
         FragmentManager fragmentManager = getFragmentManager();
         UsersListFragment usersListFragment = (UsersListFragment) fragmentManager.findFragmentById(R.id.usersListFragment);
 
-        aa = new UserAdapter(UsersListActivity.this, R.layout.userlist_item, users);
 
-        if (usersListFragment != null) usersListFragment.setListAdapter(aa);
+        if (usersListFragment != null) usersListFragment.setListAdapter(mAdapter);
 
     }
 
