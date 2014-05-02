@@ -27,6 +27,25 @@ android {
         minSdkVersion 8
         targetSdkVersion 18
     }
+
+    buildTypes {
+        release {
+            runProguard true
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+
+    productFlavors {
+
+        flavor1 {
+
+        }
+
+        flavor2 {
+
+            proguardFile 'proguard-project.txt'
+        }
+    }
 }
 
 dependencies {

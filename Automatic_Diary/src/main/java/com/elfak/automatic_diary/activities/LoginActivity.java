@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.elfak.automatic_diary.R;
 import com.elfak.automatic_diary.api.RestClient;
+import com.elfak.automatic_diary.receivers.LocationAlarmReceiver;
 import com.elfak.automatic_diary.utils.NetUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
@@ -42,6 +43,8 @@ public class LoginActivity extends Activity {
     PersistentCookieStore cookieStore;
 
     ProgressDialog progressDialog;
+
+    LocationAlarmReceiver alarm = new LocationAlarmReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +138,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 super.onSuccess(statusCode, headers, responseBody);
+                alarm.setAlarm(LoginActivity.this);
                 Intent intent = new Intent(LoginActivity.this, UsersListActivity.class);
                 intent.putExtra("username",username);
                 startActivity(intent);

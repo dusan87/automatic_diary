@@ -17,6 +17,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <uses-feature android:glEsVersion="0x00020000"
                   android:required="true"/>
     <uses-feature
@@ -42,9 +45,6 @@
         </activity>
         <activity android:name=".activities.LoginActivity"
             android:label="Login"/>
-        <activity android:name=".activities.LocationGetLocationActivity"
-            android:label="Location">
-        </activity>
         <activity
             android:name=".activities.RegistrationActivity"
             android:label="@string/registration_label">
@@ -70,6 +70,16 @@
             android:label="MapView">
 
         </activity>
+
+        <receiver android:name=".receivers.LocationAlarmReceiver"/>
+
+        <receiver android:name=".receivers.BootReceiver">
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".services.SendUserLocationService"/>
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
