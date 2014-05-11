@@ -1,5 +1,7 @@
 package com.elfak.automatic_diary.core;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +18,13 @@ public class User implements Serializable {
     protected String image;
     protected String  bday;
     protected String gender;
+    protected LatLng location;
+    private boolean isLogged;
+
+    public User(boolean isLogged) {
+        super();
+        this.isLogged = isLogged;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -87,5 +96,21 @@ public class User implements Serializable {
 
     public void setBirthDay(String bday){
         this.bday = bday;
+    }
+
+    public boolean isLogged() {
+        return isLogged;
+    }
+
+    public void setLogged(boolean isLogged) {
+        this.isLogged = isLogged;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 }

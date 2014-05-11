@@ -78,7 +78,7 @@ public class UsersListFragment extends ListFragment  {
                 List<LinkedTreeMap<String,String>> jsonOfResultsComplete = (List<LinkedTreeMap<String,String>>)resultFullJsonArrayComplete.get("results");
 
                 for(LinkedTreeMap<String, String> _user : jsonOfResultsComplete){
-                    User user = new User();
+                    User user = new User(false);
                     user.setFirstName(_user.get("first_name"));
                     user.setLastName(_user.get("last_name"));
                     user.setCurrentCountry(_user.get("country"));

@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.elfak.automatic_diary.R;
 import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.core.User;
 import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.image.SmartImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,8 @@ public class UserAdapter extends BaseAdapter {
 
     private final Context mContext;
 
-    RestClient getHttpClientAvatar = new RestClient();
+    private RestClient getHttpClientAvatar = new RestClient();
+
     public UserAdapter(Context context) {
         mContext = context;
     }
@@ -79,13 +80,15 @@ public class UserAdapter extends BaseAdapter {
             rowView = view;
         }
 
-        final ImageView avatar = (ImageView) rowView.findViewById(R.id.img_user_list);
+        final SmartImageView avatar = (SmartImageView) rowView.findViewById(R.id.img_user_list);
         TextView full_name = (TextView) rowView.findViewById(R.id.tv_user_full_name);
         TextView country  = (TextView) rowView.findViewById(R.id.tv_user_country);
         TextView birth_day = (TextView) rowView.findViewById(R.id.tv_user_bday);
+
         full_name.setText(user.getFirstName()+ " " + user.getLastName());
         country.setText(user.getCurrentCountry() + ", " + user.getCurrentCity());
         birth_day.setText(user.getBday());
+
         String[] allowedContentTypes = new String[] { "image/png", "image/jpeg" };
         getHttpClientAvatar.get("media/" + user.getImageUrl(), new BinaryHttpResponseHandler(allowedContentTypes){
             @Override
@@ -100,6 +103,20 @@ public class UserAdapter extends BaseAdapter {
             }
 
         });
+
+//        SmartImage smartImage = new SmartImage() {
+//            @Override
+//            public Bitmap getBitmap(Context context) {
+//                context.getContentResolver();
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//                options.inPurgeable = true;
+//                options.inSampleSize = 3;
+//
+//            }
+//        }
+//        String  imgUrl = getHttpClientAvatar.getAbsoluteUrl("media/" + user.getImageUrl());
+
 
         return rowView;
     }

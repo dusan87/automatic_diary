@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.SystemClock;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.widget.Toast;
 
@@ -28,7 +27,6 @@ public class LocationAlarmReceiver extends WakefulBroadcastReceiver {
 
         Intent serviceIntent = new Intent(context, SendUserLocationService.class);
 
-
         startWakefulService(context, serviceIntent);
     }
 
@@ -40,8 +38,9 @@ public class LocationAlarmReceiver extends WakefulBroadcastReceiver {
 
         alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        mAlarmMng.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + INITAL_ALARM_DELAY,
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
+        mAlarmMng.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INITAL_ALARM_DELAY, INITAL_ALARM_DELAY, alarmIntent);
+//        mAlarmMng.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INITAL_ALARM_DELAY,
+//                AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
 
         // enable to automatically restart the alarm when device is rebooted.
 
