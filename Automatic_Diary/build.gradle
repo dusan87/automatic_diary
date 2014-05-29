@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
 
     }
@@ -20,12 +20,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "17.0.0"
+    compileSdkVersion 19
+    buildToolsVersion "19.0.2"
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 18
+        minSdkVersion 9
+        targetSdkVersion 19
     }
 
     buildTypes {
@@ -49,10 +49,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.android.support:support-v4:19.1.0'
     compile 'com.android.support:gridlayout-v7:13.0.0'
-    compile 'com.android.support:appcompat-v7:18.0.0'
-    compile 'com.google.android.gms:play-services:4.0.30'
+    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.google.android.gms:play-services:4.4.52'
     compile files('src/main/libs/gson-2.2.4.jar')
     compile files('src/main/libs/okhttp-1.2.1-jar-with-dependencies.jar')
     compile files('src/main/libs/android-async-http-1.4.4.jar')

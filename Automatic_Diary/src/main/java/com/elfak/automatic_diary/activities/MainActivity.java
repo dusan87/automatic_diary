@@ -1,8 +1,10 @@
-package com.elfak.automatic_diary;
+package com.elfak.automatic_diary.activities;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+
+import com.elfak.automatic_diary.R;
 
 public class MainActivity extends Activity {
 
