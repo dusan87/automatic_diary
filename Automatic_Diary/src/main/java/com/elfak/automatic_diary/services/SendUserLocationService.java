@@ -93,8 +93,13 @@ public class SendUserLocationService extends Service {
 
                     Log.i("SendUserLocationService", Integer.toString(jsonOfResultsComplete.size()));
                     if(jsonOfResultsComplete.size() > 0)
-                        raiseNotification(jsonOfResultsComplete.size());
-
+                        for (LinkedTreeMap<String,String> _friend : jsonOfResultsComplete)
+                        {
+                            if(_friend.get("type").contentEquals("together")){
+                                Log.i("Together","Together");
+                            } else
+                                raiseNotification(jsonOfResultsComplete.size());
+                        }
                     super.onSuccess(response);
                 }
             });
