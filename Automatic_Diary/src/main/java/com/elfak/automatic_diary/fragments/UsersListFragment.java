@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
-import com.elfak.automatic_diary.activities.MapActivity;
+import com.elfak.automatic_diary.activities.MainActivity;
 import com.elfak.automatic_diary.activities.UserDetailActivity;
 import com.elfak.automatic_diary.adapters.UserAdapter;
 import com.elfak.automatic_diary.api.RestClient;
@@ -139,7 +139,7 @@ public class UsersListFragment extends ListFragment  {
         switch (item.getItemId()){
             case R.id.ac_skip:
 
-                Intent intent = new Intent(getActivity().getBaseContext(), MapActivity.class);
+                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
                 getActivity().startActivity(intent);
 
             default:
