@@ -1,14 +1,17 @@
 package com.elfak.automatic_diary.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
 import com.elfak.automatic_diary.api.RestClient;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,19 +30,41 @@ import java.util.Map;
 /**
  * Created by dusanristic on 1/15/14.
  */
-public class MapActivity extends Activity {
+public class MapApplicationFragment extends SupportMapFragment {
 
     RestClient httpGetClient;
     GoogleMap googleMap;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.map_activity);
-        googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
-        getFriendsLocations();
+    private static View view = null;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        super.onCreateView(inflater,container,savedInstanceState);
+
+        if(view != null){
+            ViewGroup parent = (ViewGroup)view.getParent();
+            if(parent !=null){
+                parent.removeView(view);
+            }
+        }
+
+        try {
+            view = inflater.inflate(R.layout.map_activity, container ,false);
+        } catch (InflateException e){
+            e.printStackTrace();
+        }
+
+        if(googleMap == null)
+             googleMap = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+
+        return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
     private void getFriendsLocations() {
 
         httpGetClient =  new RestClient();
@@ -66,7 +91,7 @@ public class MapActivity extends Activity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(MapActivity.this, "FAILURE", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "FAILURE", Toast.LENGTH_LONG).show();
                 super.onFailure(statusCode, headers, responseBody, error);
             }
         });

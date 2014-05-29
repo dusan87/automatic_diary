@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.elfak.automatic_diary.R;
 import com.elfak.automatic_diary.activities.LoginActivity;
-import com.elfak.automatic_diary.activities.MapActivity;
+import com.elfak.automatic_diary.activities.MainActivity;
 import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.receivers.LocationAlarmReceiver;
 import com.google.gson.Gson;
@@ -56,7 +56,7 @@ public class SendUserLocationService extends Service {
         cookieStore = new PersistentCookieStore(getBaseContext());
         postHttpClient = new RestClient();
         location = getUserLocation();
-        Log.i("Login", Double.toString(location.getLongitude()));
+//        Log.i("Login", Double.toString(location.getLongitude()));
     }
 
     @Override
@@ -174,7 +174,7 @@ public class SendUserLocationService extends Service {
 
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this , 0, new Intent(this, MapActivity.class) , 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this , 0, new Intent(this, MainActivity.class) , 0);
 
         String contextText = "You have got " + friends_number.toString()  + (friends_number > 1 ? " friends" : " friend") +  " near by you!";
         NotificationCompat.Builder mBuilder =

@@ -23,8 +23,8 @@ public class SplashActivity extends Activity {
         try {
             new Handler().postDelayed(new Runnable() {
                 public void run() {
-                    if (false) {
-                        startMapActivity();
+                    if (true) {
+                        startMainActivity();
                         return;
                     } else {
                         startLoginActivity();
@@ -40,8 +40,8 @@ public class SplashActivity extends Activity {
         } catch(Exception e){}
     }
 
-    public void startMapActivity(){
-        Intent intent = new Intent(SplashActivity.this, MapActivity.class);
+    public void startMainActivity(){
+        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }

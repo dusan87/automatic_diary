@@ -1,14 +1,14 @@
 package com.elfak.automatic_diary.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +24,7 @@ import com.elfak.automatic_diary.R;
 
 import java.util.Locale;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
 
     private DrawerLayout mDrawerLayout;
@@ -33,7 +33,8 @@ public class MainActivity extends Activity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPlanetTitles;
+    private String[] mMenuList;
+    Fragment fragment = null;
 
 
     @Override
@@ -41,17 +42,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
         mTitle = mDrawerTitle = getTitle();
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView)findViewById(R.id.left_drawer);
+        mMenuList = getResources().getStringArray(R.array.planets_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
+                R.layout.drawer_list_item, mMenuList));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this,
                 mDrawerLayout,
@@ -59,12 +60,12 @@ public class MainActivity extends Activity {
                 R.string.drawer_open,
                 R.string.drawer_close) {
 
-            public  void onDrawClosed(View view){
+            public void onDrawClosed(View view) {
                 getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
-            public void onDrawOpened(View drawerView){
+            public void onDrawOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
@@ -72,7 +73,7 @@ public class MainActivity extends Activity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             selectItem(0);
         }
     }
@@ -99,18 +100,18 @@ public class MainActivity extends Activity {
         //The  action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
 
-        if(mDrawerToggle.onOptionsItemSelected(item)){
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
         //Handle action buttons
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_websearch:
                 Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
+                intent.putExtra(SearchManager.QUERY, getSupportActionBar().getTitle());
 
-                if(intent.resolveActivity(getPackageManager()) != null){
+                if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
@@ -129,26 +130,44 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
-        Fragment fragment = new PlanetFrament();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFrament.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
+
+        switch (position) {
+            case 0:
+                fragment = new MapApplicationFragment();
+                break;
+            case 1:
+                fragment = new PlanetFrament();
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            default:
+                break;
+        }
+
+        if (fragment != null) {
+            Bundle args = new Bundle();
+            args.putInt(PlanetFrament.ARG_PLANET_NUMBER, position);
+            fragment.setArguments(args);
 
 
-        FragmentManager fragmentManager =  getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
-        //update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position,true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+            //update selected item and title, then close the drawer
+            mDrawerList.setItemChecked(position, true);
+            setTitle(mMenuList[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
+        }
 
     }
 
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        getSupportActionBar().setTitle(mTitle);
     }
 
     /**
@@ -170,17 +189,17 @@ public class MainActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private class PlanetFrament extends Fragment {
-        public static final String ARG_PLANET_NUMBER ="planet_number";
+    public static class PlanetFrament extends Fragment {
+        public static final String ARG_PLANET_NUMBER = "planet_number";
 
-        private PlanetFrament() {
+        public PlanetFrament() {
             // Empty constructor required for fragment subclasses
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_planet, container,false);
+            View rootView = inflater.inflate(R.layout.fragment_planet, container, false);
             int i = getArguments().getInt(ARG_PLANET_NUMBER);
 
             String planet = getResources().getStringArray(R.array.planets_array)[i];
