@@ -1,7 +1,7 @@
 package com.elfak.automatic_diary.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
-import com.elfak.automatic_diary.activities.LoginActivity;
 import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.utils.SessionManager;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +38,15 @@ public class MapApplicationFragment extends SupportMapFragment {
 
     private static View view = null;
 
+    SessionManager session;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        session = new SessionManager(activity.getApplicationContext());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -60,6 +68,8 @@ public class MapApplicationFragment extends SupportMapFragment {
         if(googleMap == null)
              googleMap = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
+        getFriendsLocations();
+
         return view;
     }
 
@@ -67,11 +77,13 @@ public class MapApplicationFragment extends SupportMapFragment {
     public void onDestroyView() {
         super.onDestroyView();
     }
+
+
     private void getFriendsLocations() {
 
         httpGetClient =  new RestClient();
 
-        String username = LoginActivity.session.getUserDetails().get(SessionManager.USERNAME);
+        String username = session.getUserDetails().get(SessionManager.USERNAME);
 
         RequestParams params = new RequestParams("username", username);
         httpGetClient.get("friends_locations/", params, new JsonHttpResponseHandler() {
@@ -86,7 +98,6 @@ public class MapApplicationFragment extends SupportMapFragment {
 
                 if(jsonOfResultsComplete.size() > 0){
                     for(LinkedTreeMap<String,String> _friend : jsonOfResultsComplete){
-                        Log.i("MapActivity", (_friend.get("lat")) + "/" +  _friend.get("long"));
                         addMarker(Double.parseDouble(_friend.get("lat")), Double.parseDouble(_friend.get("long")));
                     }
                 }

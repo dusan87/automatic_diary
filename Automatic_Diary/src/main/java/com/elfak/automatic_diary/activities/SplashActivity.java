@@ -34,12 +34,9 @@ public class SplashActivity extends Activity {
                     }
                 }
             }, SPLASH_DELAY);
-
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                }
-            }, SPLASH_DELAY);
-        } catch(Exception e){}
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void startMainActivity(){

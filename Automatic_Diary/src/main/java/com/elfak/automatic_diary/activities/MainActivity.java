@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
+import com.elfak.automatic_diary.fragments.MapApplicationFragment;
+import com.elfak.automatic_diary.utils.SessionManager;
 
 import java.util.Locale;
 
@@ -36,11 +38,14 @@ public class MainActivity extends ActionBarActivity {
     private String[] mMenuList;
     Fragment fragment = null;
 
-
+    SessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
+
+        session = new SessionManager(getApplicationContext());
+
         mTitle = mDrawerTitle = getTitle();
         mMenuList = getResources().getStringArray(R.array.menu_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
