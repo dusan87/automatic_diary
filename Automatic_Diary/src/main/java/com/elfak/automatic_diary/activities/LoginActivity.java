@@ -17,6 +17,7 @@ import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.core.User;
 import com.elfak.automatic_diary.receivers.LocationAlarmReceiver;
 import com.elfak.automatic_diary.utils.NetUtils;
+import com.elfak.automatic_diary.utils.SessionManager;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
@@ -49,12 +50,16 @@ public class LoginActivity extends Activity {
 
     public static User user;
 
+    public static SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Crashlytics.start(this);
         setContentView(R.layout.activity_login);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        session = new SessionManager(getApplicationContext());
 
         if(user == null)
             user = new User(false);
@@ -145,12 +150,17 @@ public class LoginActivity extends Activity {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 super.onSuccess(statusCode, headers, responseBody);
                 alarm.setAlarm(LoginActivity.this);
+
                 LoginActivity.user.setLogged(true);
                 LoginActivity.user.setUsername(username);
+
+                session.createLoginSession(username);
+
                 Intent intent = new Intent(LoginActivity.this, UsersListActivity.class);
                 intent.putExtra("username",username);
                 startActivity(intent);
                 progressDialog.dismiss();
+                finish();
 
             }
 

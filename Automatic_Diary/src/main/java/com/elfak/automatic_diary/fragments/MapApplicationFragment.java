@@ -1,4 +1,4 @@
-package com.elfak.automatic_diary.activities;
+package com.elfak.automatic_diary.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
+import com.elfak.automatic_diary.activities.LoginActivity;
 import com.elfak.automatic_diary.api.RestClient;
+import com.elfak.automatic_diary.utils.SessionManager;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -69,7 +71,9 @@ public class MapApplicationFragment extends SupportMapFragment {
 
         httpGetClient =  new RestClient();
 
-        RequestParams params = new RequestParams("username", LoginActivity.user.getUsername());
+        String username = LoginActivity.session.getUserDetails().get(SessionManager.USERNAME);
+
+        RequestParams params = new RequestParams("username", username);
         httpGetClient.get("friends_locations/", params, new JsonHttpResponseHandler() {
 
             @Override

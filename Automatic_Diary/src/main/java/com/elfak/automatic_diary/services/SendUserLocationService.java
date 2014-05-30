@@ -17,6 +17,7 @@ import com.elfak.automatic_diary.activities.LoginActivity;
 import com.elfak.automatic_diary.activities.MainActivity;
 import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.receivers.LocationAlarmReceiver;
+import com.elfak.automatic_diary.utils.SessionManager;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -76,7 +77,7 @@ public class SendUserLocationService extends Service {
             }
             params.put("lat", Double.toString(location.getLatitude()));
             params.put("long", Double.toString(location.getLongitude()));
-            params.put("username", LoginActivity.user.getUsername());
+            params.put("username", LoginActivity.session.getUserDetails().get(SessionManager.USERNAME));
 
             Log.i("Login", LoginActivity.user.getUsername());
             postHttpClient.post("update_location/", params, new JsonHttpResponseHandler() {

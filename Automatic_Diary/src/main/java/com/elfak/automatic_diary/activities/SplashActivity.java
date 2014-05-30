@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.elfak.automatic_diary.R;
+import com.elfak.automatic_diary.utils.SessionManager;
 
 /**
  * Created by dusanristic on 1/17/14.
@@ -14,16 +15,17 @@ public class SplashActivity extends Activity {
 
     Integer SPLASH_DELAY = 2000;
 
+    SessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        session = new SessionManager(getApplicationContext());
 
         try {
             new Handler().postDelayed(new Runnable() {
                 public void run() {
-                    if (true) {
+                    if (session.isLoggedIn()) {
                         startMainActivity();
                         return;
                     } else {
