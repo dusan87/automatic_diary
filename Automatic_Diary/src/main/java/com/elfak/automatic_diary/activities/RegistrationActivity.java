@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.elfak.automatic_diary.R;
 import com.elfak.automatic_diary.api.RestClient;
+import com.elfak.automatic_diary.utils.Constants;
 import com.elfak.automatic_diary.utils.NetUtils;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
@@ -44,13 +45,6 @@ public class RegistrationActivity extends Activity {
         setContentView(R.layout.activity_regestration);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        // I made get request here in order to get all cookies that I need in rest of code
-        getHttpClient = new RestClient();
-        cookieStore = new PersistentCookieStore(RegistrationActivity.this);
-        getHttpClient.setCookieStore(cookieStore);
-
-        getHttpClient.get("check_user/", new AsyncHttpResponseHandler() {
-        });
         bindElements();
     }
 
@@ -101,21 +95,13 @@ public class RegistrationActivity extends Activity {
         password2 = edt_repassword.getText().toString();
 
         postHttpClient = new RestClient();
-
         RequestParams params = new RequestParams();
-        List<Cookie> cookies = cookieStore.getCookies();
 
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("csrftoken")) {
-                params.put("csrfmiddlewaretoken", cookie.getValue());
-            }
-        }
+        params.put(Constants.USER_EMAIL, email);
+        params.put(Constants.USER_PASSWORD1, password1);
+        params.put(Constants.USER_PASSWORD2, password2);
 
-        params.put("username", email);
-        params.put("password1", password1);
-        params.put("password2", password2);
-
-        postHttpClient.post("check_user/", params, new AsyncHttpResponseHandler() {
+        postHttpClient.post(Constants.API_VALIDATE_USER, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
