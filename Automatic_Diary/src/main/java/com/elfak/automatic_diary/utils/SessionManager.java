@@ -29,6 +29,8 @@ public class SessionManager {
 
     public static final String USERNAME = "email";
 
+    public static final String BASIC_AUTH = "basicAuth";
+
     public SessionManager(Context context) {
 
         this.context = context;
@@ -45,11 +47,20 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void setLoginSession(String basicAuth) {
+
+        editor.putBoolean(IS_LOGIN, true);
+        editor.putString(BASIC_AUTH, basicAuth);
+
+        editor.commit();
+    }
+
     public HashMap<String,String> getUserDetails(){
 
         HashMap<String,String> user = new HashMap<String, String>();
 
         user.put(USERNAME,pref.getString(USERNAME, null));
+        user.put(BASIC_AUTH, pref.getString(BASIC_AUTH, null));
 
         return user;
     }
