@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,30 +41,31 @@ import org.apache.http.cookie.Cookie;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Random;
+
+import com.elfak.automatic_diary.utils.Constants;
 
 /**
  * Created by dusanristic on 12/10/13.
  */
 public class RegistrationActivity_1 extends Activity {
 
-    String username, password1, passowrd2, first_name, last_name, gender, bday, country, city;
-    EditText edt_first_name, edt_last_name, edt_country, edt_city;
-    Spinner sp_gender;
-    TextView tv_bday_date;
+    String username, password1, passowrd2, first_name, last_name, bday, country, city, phone;
+    EditText edt_first_name, edt_last_name, edt_country, edt_city, edt_phone, edt_birth_day;
+
     ImageView iv_profile_photo;
+    RadioGroup rg_gender;
 
     Button btn_cancel, btn_next;
 
     Uri imageUri;
-
     ProgressDialog progressDialog;
-
     PersistentCookieStore cookieStore;
-
     RestClient getHttpClient, postHttpClient;
 
     boolean image_flag = false;
     String profile_photo_path = null;
+    String gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +73,8 @@ public class RegistrationActivity_1 extends Activity {
         setContentView(R.layout.activity_1_registration);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        getHttpClient = new RestClient();
         cookieStore = new PersistentCookieStore(RegistrationActivity_1.this);
-        getHttpClient.setCookieStore(cookieStore);
-        getHttpClient.get("create_user/", new AsyncHttpResponseHandler() {
-        });
+
 
         bindElements();
     }
@@ -86,16 +86,17 @@ public class RegistrationActivity_1 extends Activity {
         edt_last_name = (EditText) findViewById(R.id.edt_last_name);
         edt_country = (EditText) findViewById(R.id.edt_country);
         edt_city = (EditText) findViewById(R.id.edt_city);
-        tv_bday_date = (TextView) findViewById(R.id.tv_registration_bday);
-        sp_gender = (Spinner) findViewById(R.id.sp_registration_gender);
+        edt_birth_day = (EditText) findViewById(R.id.edt_bday);
+        rg_gender = (RadioGroup) findViewById(R.id.rg_gender);
+        edt_phone = (EditText) findViewById(R.id.edt_phone);
+
 
         // Buttons
-
         btn_next = (Button) findViewById(R.id.btn_registration_next1);
         btn_cancel = (Button) findViewById(R.id.btn_cancel_registration);
 
-        // Get Intent from Registration activity
 
+        // Get Intent from Registration activity
         Intent intent = getIntent();
 
         username = intent.getStringExtra("username");
@@ -104,7 +105,6 @@ public class RegistrationActivity_1 extends Activity {
 
 
         // Profile photo /Image view
-
         iv_profile_photo = (ImageView) findViewById(R.id.iv_profile_photo);
         iv_profile_photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,11 +136,11 @@ public class RegistrationActivity_1 extends Activity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
 
-                tv_bday_date.setText(String.valueOf(year) + "-" + String.valueOf(monthOfYear) + "-" + String.valueOf(dayOfMonth));
+                edt_birth_day.setText(String.valueOf(year) + "-" + String.valueOf(monthOfYear) + "-" + String.valueOf(dayOfMonth));
             }
         };
 
-        tv_bday_date.setOnClickListener(new View.OnClickListener() {
+        edt_birth_day.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatePickerDialog dialog = new DatePickerDialog(RegistrationActivity_1.this, datePickerListener, 2013, 03, 05);
@@ -152,7 +152,10 @@ public class RegistrationActivity_1 extends Activity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fillUserProfile();
+                if (validateFields()) {
+
+                    fillUserProfile();
+                }
             }
         });
 
@@ -164,6 +167,8 @@ public class RegistrationActivity_1 extends Activity {
         });
 
 
+        // Set default gender value
+        setDefaultGender();
     }
 
     private void takePhoto() {
@@ -242,44 +247,33 @@ public class RegistrationActivity_1 extends Activity {
         progressDialog = ProgressDialog.show(RegistrationActivity_1.this, "Create account", "Creating account ...", true);
         first_name = edt_first_name.getText().toString();
         last_name = edt_last_name.getText().toString();
-        bday = tv_bday_date.getText().toString();
+        bday = edt_birth_day.getText().toString();
         city = edt_city.getText().toString();
         country = edt_country.getText().toString();
-        gender = sp_gender.getSelectedItem().toString().equals("Male") ? "M": "F";
+        phone = edt_phone.getText().toString();
 
         postHttpClient = new RestClient();
-
         RequestParams params = new RequestParams();
-
-        List<Cookie> cookies = cookieStore.getCookies();
-
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("csrftoken")) {
-                params.put("csrfmiddlewaretoken", cookie.getValue());
-            }
-        }
-
 
         File profile_photo = image_flag ?new File(profile_photo_path) : new File(Environment.getExternalStorageDirectory() + "/DictionaryTemp/profile.png");
 
         try {
-            params.put("image", profile_photo);
+            params.put(Constants.IMAGE, profile_photo);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        params.put("first_name", first_name);
-        params.put("last_name", last_name);
-        params.put("username", username);
-        params.put("password1", password1);
-        params.put("password2", passowrd2);
-        params.put("city", city);
-        params.put("country", country);
-        params.put("birth_day", bday);
-        params.put("gender", gender);
+        params.put(Constants.USER_FIRST_NAME, first_name);
+        params.put(Constants.USER_LAST_NAME, last_name);
+        params.put(Constants.USER_EMAIL, username);
+        params.put(Constants.USER_PASSWORD, password1);
+        params.put(Constants.USER_BIRTHDAY, bday);
+        params.put(Constants.USER_GENDER, gender);
+        params.put(Constants.CITY, city);
+        params.put(Constants.COUNTRY, country);
+        params.put(Constants.PHONE, phone);
 
-
-        postHttpClient.post("create_user/", params, new AsyncHttpResponseHandler() {
+        postHttpClient.post(Constants.API_CREATE_USER, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -301,5 +295,56 @@ public class RegistrationActivity_1 extends Activity {
 
     }
 
+    public void onRadioButtonClicked(View view) {
 
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.rb_male:
+                if (checked) gender = Constants.USER_GENDER_MALE;
+            case R.id.rb_female:
+                if (checked) gender = Constants.USER_GENDER_FEMALE;
+        }
+    }
+
+    private boolean validateFields() {
+        if (edt_first_name.getText().toString().trim().equals("")) {
+            edt_first_name.setError(Constants.REQUIRED_FIELD);
+
+            return false;
+        }
+
+        if (edt_last_name.getText().toString().trim().equals("")) {
+            edt_last_name.setError(Constants.REQUIRED_FIELD);
+
+            return false;
+        }
+
+        if (edt_country.getText().toString().trim().equals("")) {
+            edt_country.setError(Constants.REQUIRED_FIELD);
+            return false;
+        }
+
+        if (edt_city.getText().toString().trim().equals("")) {
+            edt_city.setError(Constants.REQUIRED_FIELD);
+            return false;
+        }
+
+        if (edt_phone.getText().toString().trim().equals("")) {
+            edt_phone.setError(Constants.REQUIRED_FIELD);
+            return false;
+        }
+
+        if (edt_birth_day.getText().toString().trim().equals("")) {
+            edt_birth_day.setError(Constants.REQUIRED_FIELD);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private void setDefaultGender(){
+        rg_gender.check(R.id.rb_male);
+        gender = Constants.USER_GENDER_MALE;
+    }
 }
