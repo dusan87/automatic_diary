@@ -4,6 +4,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import org.apache.http.client.*;
 /**
@@ -11,11 +12,11 @@ import org.apache.http.client.*;
  */
 public class RestClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:8000/";
+    private static final String BASE_URL = "http://10.0.3.2:8000/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
-    public void setCookieStore(CookieStore cookieStore){
+    public void setCookieStore(PersistentCookieStore cookieStore){
         client.setCookieStore(cookieStore);
     }
 
@@ -24,7 +25,7 @@ public class RestClient {
     }
 
     public void get(String url, RequestParams params , JsonHttpResponseHandler jsonHttpResponseHandler){
-        client.get(getAbsoluteUrl(url) , params, jsonHttpResponseHandler);
+        client.get(getAbsoluteUrl(url), params, jsonHttpResponseHandler);
     }
 
     public void get(String url, AsyncHttpResponseHandler responseHandler){
@@ -35,6 +36,13 @@ public class RestClient {
         client.get(getAbsoluteUrl(url), binaryHttpResponseHandler);
     }
 
+    public void setBasicAuth(String username, String password) {
+        client.setBasicAuth(username, password);
+    }
+
+    public void setHeader(String header, String value){
+        client.addHeader(header, value);
+    }
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
     }
