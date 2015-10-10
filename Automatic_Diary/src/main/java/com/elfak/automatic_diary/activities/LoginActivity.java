@@ -5,17 +5,19 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.Crashlytics;
 import com.elfak.automatic_diary.R;
 import com.elfak.automatic_diary.api.RestClient;
 import com.elfak.automatic_diary.core.User;
 import com.elfak.automatic_diary.receivers.LocationAlarmReceiver;
+import com.elfak.automatic_diary.utils.Constants;
 import com.elfak.automatic_diary.utils.NetUtils;
 import com.elfak.automatic_diary.utils.SessionManager;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -55,7 +57,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Crashlytics.start(this);
+//        Crashlytics.start(this);
         setContentView(R.layout.activity_login);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -64,16 +66,7 @@ public class LoginActivity extends Activity {
         if(user == null)
             user = new User(false);
 
-        getHttpClient = new RestClient();
-        cookieStore = new PersistentCookieStore(LoginActivity.this);
-        getHttpClient.setCookieStore(cookieStore);
-
-        getHttpClient.get("login_user/", new AsyncHttpResponseHandler() {
-        });
-
         bindElements();
-
-
     }
 
     private void bindElements() {
@@ -91,8 +84,8 @@ public class LoginActivity extends Activity {
             public void onClick(View view) {
                 if (!NetUtils.isNetworkOnline(LoginActivity.this)) {
                     Toast.makeText(LoginActivity.this, "Device is not connected. Please, connect device and try again to Login!", 10).show();
-                } else {
-                    attemptLogin();
+                } else if (validateFields()){
+                     attemptLogin();
                 }
             }
 
@@ -131,20 +124,10 @@ public class LoginActivity extends Activity {
 
         postHttpClient = new RestClient();
 
-        RequestParams params = new RequestParams();
+        final String basicAuth = "Basic " + Base64.encodeToString((username + ":" + password).getBytes(), Base64.DEFAULT);
+        postHttpClient.setHeader("Authorization", basicAuth);
 
-        List<Cookie> cookies = cookieStore.getCookies();
-
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("csrftoken")) {
-                params.put("csrfmiddlewaretoken", cookie.getValue());
-            }
-        }
-
-        params.put("username", username);
-        params.put("password", password);
-
-        postHttpClient.post("login_user/", params, new AsyncHttpResponseHandler() {
+        postHttpClient.post(Constants.API_LOGIN_USER, null, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -155,6 +138,9 @@ public class LoginActivity extends Activity {
                 LoginActivity.user.setUsername(username);
 
                 session.createLoginSession(username);
+
+                // this new way of keeping basic auth
+                session.setLoginSession(basicAuth);
 
                 Intent intent = new Intent(LoginActivity.this, UsersListActivity.class);
                 intent.putExtra("username",username);
@@ -173,5 +159,20 @@ public class LoginActivity extends Activity {
         });
     }
 
+    private boolean validateFields() {
+        if (edt_username.getText().toString().trim().equals("")) {
+            edt_username.setError(Constants.REQUIRED_FIELD);
+
+            return false;
+        }
+
+        if (edt_password.getText().toString().trim().equals("")) {
+            edt_password.setError(Constants.REQUIRED_FIELD);
+
+            return false;
+        }
+
+        return true;
+    }
 
 }
